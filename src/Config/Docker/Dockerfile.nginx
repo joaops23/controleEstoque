@@ -1,0 +1,14 @@
+# Use a imagem oficial do Nginx como base
+FROM nginx:latest
+
+# Copiar o arquivo de configuração do Nginx para o container
+COPY ./src/Config/Docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# Copiar o conteúdo do seu projeto para o diretório raiz do Nginx no container
+COPY ./ /usr/share/nginx/html
+
+# Expor a porta 80 para acessar o Nginx externamente
+EXPOSE 80
+
+# Configurar o Nginx para rodar em primeiro plano (não rodar em modo daemon)
+CMD ["nginx", "-g", "daemon off;"]

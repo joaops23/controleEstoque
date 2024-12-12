@@ -1,0 +1,48 @@
+version: "3"
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./src/Config/Docker/Dockerfile.nginx
+    ports:
+      - "8080:80"
+    networks:
+      - internal
+    volumes:
+      - ./:/usr/share/nginx/html:ro 
+    depends_on:
+      - php
+    links:
+    - php
+    environment:
+      - NGINX_HOST=127.0.0.1
+      - NGINX_PORT=8080
+
+  php:
+    build:
+      context: .
+      dockerfile: ./src/Config/Docker/Dockerfile.php
+    networks:
+      - internal
+    volumes:
+      - ./:/usr/share/nginx/html:ro 
+    expose:
+      - 9000
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: estoque
+      MYSQL_PASSWORD: 1045
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  db_data:

@@ -78,10 +78,10 @@ hest_data datetime TIMESTAMP
 - Nginx
 
 ## Features Desenvolvidas
+- Dockerização
 
 ## Próximas features
 v1
-- Dockerização
 - Script de criação de banco
 - Construção da base da api
 - Módulo usuario
@@ -94,3 +94,11 @@ v2
 - Módulo de compra 
 - Módulo de venda
 - Dashboard
+
+
+### Passo a passo
+
+- Instalação dos containers e execução do projeto
+```bash
+docker-compose up -d --build
+```
