@@ -1,5 +1,6 @@
 <?php
 namespace Config;
+require __DIR__ . '/../../vendor/autoload.php';
 
 use Dotenv\Dotenv;
 

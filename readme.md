@@ -79,10 +79,10 @@ hest_data datetime TIMESTAMP
 
 ## Features Desenvolvidas
 - Dockerização
+- Script de criação de banco
 
 ## Próximas features
 v1
-- Script de criação de banco
 - Construção da base da api
 - Módulo usuario
 - Módulo produto
