@@ -80,11 +80,11 @@ hest_data datetime TIMESTAMP
 ## Features Desenvolvidas
 - Dockerização
 - Script de criação de banco
+- Construção da base da api
 
 ## Próximas features
 v1
-- Construção da base da api
-- Módulo usuario
+- Módulo usuario ( CRUD )
 - Módulo produto
 - Módulo estoque (juntamente com controle do histórico)
 - Tela interativa para controlar as features (possivelmente em um novo repo)
@@ -102,3 +102,51 @@ v2
 ```bash
 docker-compose up -d --build
 ```
+
+- Caso o usuário root não tenha sido criado, executar o script  `src/Resources/sql/createDefaultUser.sql` no banco de dados
+
+#### Módulos
+
+## Usuario
+### Rotas - agrupadas em: /user
+
+##  /login - POST
+Rota de acesso de usuário, informado no payload o usuário e senha de acesso.
+
+#### Payload
+```javascript
+{
+    "data": {
+        "login": "User12345",
+        "password": "123432514"
+    }
+}
+```
+
+#### Retorno
+```javascript
+{
+    data: {
+        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlJvZHJpZ28iLCJyb2xlIjoiYWRtaW4ifQ.vqoDiXce_zGG5I81wI2-gbzRq4k2B70UIr1NuZ08Z_4",
+        timeout: 60, // dado apenas informativo do tempo de sessão do usuário
+    }
+}
+```
+
+##### HTTP Code
+- 200 - ok ( Usuário validado e credenciais confirmadas)
+- 403 - forbidden ( Acesso negado | Credenciais inválidas )
+
+
+| /{$id} - GET
+
+Rota para recuperar dados de um usuário específico
+
+
+| /insertUpdate - POST
+
+Rota para 
+
+### Regras
+- Apenas um usuário cadastrado pode criar um novo usuário
+- Tempo máximo logado 1h

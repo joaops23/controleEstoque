@@ -1,0 +1,1 @@
+insert into usuario (usu_id, usu_nome, usu_cpf, usu_email, usu_senha) values(1, 'Admin', '64384667434', 'teste@teste.com', '123456');
