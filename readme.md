@@ -81,10 +81,10 @@ hest_data datetime TIMESTAMP
 - Dockerização
 - Script de criação de banco
 - Construção da base da api
+- Módulo usuario ( CRUD )
 
 ## Próximas features
 v1
-- Módulo usuario ( CRUD )
 - Módulo produto
 - Módulo estoque (juntamente com controle do histórico)
 - Tela interativa para controlar as features (possivelmente em um novo repo)

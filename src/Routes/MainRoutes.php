@@ -23,6 +23,11 @@ class MainRoutes extends RoutesDefault{
             $group->post('/', '\Controllers\Usuario\UsuarioController::getUsers');
             $group->get("/{id}", '\Controllers\Usuario\UsuarioController::getUsersById');
             $group->post('/store', '\Controllers\Usuario\UsuarioController::storeUser');
+            $group->post('/update/{id}', '\Controllers\Usuario\UsuarioController::updateUser');
+        });
+
+        $this->app->group('/product', function (RouteCollectorProxy $group) {
+            $group->get('', '');
         });
     }
 }

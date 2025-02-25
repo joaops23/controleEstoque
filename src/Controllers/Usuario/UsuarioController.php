@@ -62,6 +62,24 @@ class UsuarioController extends Controller {
         }
     }
 
+    public static function updateUser(Request $req, Response $res, $args)
+    {
+        $ctr = new static();
+
+        try{
+            $body = self::getBody($req);
+            $id = $args['id'];
+
+            self::trataCadastro($body);
+            $params = self::setParamsToInsert($body);
+    
+            $resp = $ctr->model->setUpdateUser($id, $params);
+
+            return $ctr::getResponse($res, ["id" => $resp], '201');
+        } catch(\Exception $e) {
+            return $ctr::getResponse($res, ['message' => $e->getMessage()], "403");
+        }
+    }
 
     # Métodos de apoio
     private static function setParamsToFetch($paramsReq)

@@ -80,6 +80,33 @@ class Usuario extends Connector
             throw new \Exception("Não foi possível cadastrar o usuário, entre em contato com o administrador!\n {$e->getMessage()}");
         }
     }
+
+    public function setUpdateUser($id, $params)
+    {
+        $this->conn->beginTransaction();
+        try{
+            $query = "UPDATE usuario SET :params WHERE usu_id = ':usu_id'";
+    
+            $queryParams = "";
+
+            foreach($params as $column => $value) {
+                $queryParams .= ", $column = $value";
+            }
+    
+            $queryParams = substr(str_replace("|sl", '"', $queryParams), 1);
+
+            $query = str_replace(":params", $queryParams, $query);
+            $query = str_replace(":usu_id", $id, $query);
+    
+            $this->conn->exec($query);
+
+            $this->conn->commit();
+            return true;
+        }catch(\Exception $e) {
+            $this->conn->rollBack();
+            throw new \Exception("Não foi possível atualizar o usuário, entre em contato com o administrador!\n {$e->getMessage()}");
+        }
+    }
     
     /**
      * Neste método foi adicionado um ponteiro '&' para que as alterações do Statement sejam diretamente alteradas na variável raiz declarada no método que o chamou
