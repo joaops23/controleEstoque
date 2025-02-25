@@ -43,4 +43,61 @@ class Controller
     {
         return  ["AND", 'OR', 'BETWEEN', 'LIKE', '=', 'like', "<>"];
     }
+
+    # Métodos de apoio
+    protected static function setParamsToFetch($paramsReq)
+    {
+        $params = array();
+        $arrayParams = get_object_vars($paramsReq);
+        if(count($arrayParams)> 0) {
+            foreach($arrayParams as $i => $val) {
+                if(!empty($i) && is_array($val) && count($val)){
+                    $val = self::formatVal($val);
+                    $params[$i] = $val;
+                }
+            }
+        }
+
+        return $params;
+    }
+
+    protected static function formatVal($arrVal = array())
+    {
+        $retVal = array();
+        foreach($arrVal as $val) {
+            if(!in_array($val, static::getOperations())) {
+                $retVal[] = "|sl" . $val . "|sl";
+            } else {
+                $retVal[] = $val;
+            }
+        }
+
+        return $retVal;
+    }
+
+    protected static function setParamsToInsert($paramsReq)
+    {
+        $params = array();
+        $arrayParams = get_object_vars($paramsReq);
+        if(count($arrayParams)> 0) {
+            foreach($arrayParams as $i => $val) {
+                $val = self::formatValToInsert($val);
+                $params[$i] = $val;
+            }
+        }
+
+        return $params;
+    }
+
+    protected static function formatValToInsert($val)
+    {
+        $retVal = '';
+        if(!in_array($val, static::getOperations())) {
+            $retVal = "|sl" . $val . "|sl";
+        } else {
+            $retVal = $val;
+        }
+
+        return $retVal;
+    }
 }

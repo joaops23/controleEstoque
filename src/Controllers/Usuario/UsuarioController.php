@@ -3,7 +3,6 @@
 namespace Controllers\Usuario;
 
 use Controllers\Controller;
-use FastRoute\RouteParser\Std;
 use Models\Usuario;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -16,7 +15,7 @@ class UsuarioController extends Controller {
     {
         $this->model = new Usuario();
     }
-    public static function getUsers(Request $req, Response $res)
+    public static function getUsers(Request $req, Response $res): Response
     {
         $ctr = new static();
 
@@ -27,7 +26,7 @@ class UsuarioController extends Controller {
         return $ctr::getResponse($res, $users, "200");
     }
 
-    public static function getUsersById(Request $req, Response $res, $args)
+    public static function getUsersById(Request $req, Response $res, $args): Response
     {
         $ctr = new static();
 
@@ -43,7 +42,7 @@ class UsuarioController extends Controller {
         return $ctr::getResponse($res, $users, "200");
     }
 
-    public static function storeUser(Request $req, Response $res, $args)
+    public static function storeUser(Request $req, Response $res, $args): Response
     {
         $ctr = new static();
         try{
@@ -62,7 +61,7 @@ class UsuarioController extends Controller {
         }
     }
 
-    public static function updateUser(Request $req, Response $res, $args)
+    public static function updateUser(Request $req, Response $res, $args): Response
     {
         $ctr = new static();
 
@@ -79,63 +78,6 @@ class UsuarioController extends Controller {
         } catch(\Exception $e) {
             return $ctr::getResponse($res, ['message' => $e->getMessage()], "403");
         }
-    }
-
-    # Métodos de apoio
-    private static function setParamsToFetch($paramsReq)
-    {
-        $params = array();
-        $arrayParams = get_object_vars($paramsReq);
-        if(count($arrayParams)> 0) {
-            foreach($arrayParams as $i => $val) {
-                if(!empty($i) && is_array($val) && count($val)){
-                    $val = self::formatVal($val);
-                    $params[$i] = $val;
-                }
-            }
-        }
-
-        return $params;
-    }
-
-    private static function formatVal($arrVal = array())
-    {
-        $retVal = array();
-        foreach($arrVal as $val) {
-            if(!in_array($val, static::getOperations())) {
-                $retVal[] = "|sl" . $val . "|sl";
-            } else {
-                $retVal[] = $val;
-            }
-        }
-
-        return $retVal;
-    }
-
-    private static function setParamsToInsert($paramsReq)
-    {
-        $params = array();
-        $arrayParams = get_object_vars($paramsReq);
-        if(count($arrayParams)> 0) {
-            foreach($arrayParams as $i => $val) {
-                $val = self::formatValToInsert($val);
-                $params[$i] = $val;
-            }
-        }
-
-        return $params;
-    }
-
-    private static function formatValToInsert($val)
-    {
-        $retVal = '';
-        if(!in_array($val, static::getOperations())) {
-            $retVal = "|sl" . $val . "|sl";
-        } else {
-            $retVal = $val;
-        }
-
-        return $retVal;
     }
 
     private static function trataCadastro(&$params)
