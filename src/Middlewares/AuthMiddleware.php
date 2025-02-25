@@ -13,6 +13,11 @@ class AuthMiddleware
     public function __invoke(Request $request, RequestHandler $handler): Response
     {
         try{
+
+            if(empty($request->getHeader('Authorization'))) {
+                throw new \Exception("usuário não autenticado!");
+            }
+
             // Deixa aberta apenas a rota de login na API
             if(($request->getServerParams())['REQUEST_URI'] != '/user/login') {
     

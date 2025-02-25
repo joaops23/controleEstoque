@@ -1,13 +1,16 @@
 <?
 namespace Controllers\Login;
 
+use Controllers\Controller;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Controllers\Login\Interfaces\LoginInterface;
 use Models\Usuario;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Firebase\JWT\SignatureInvalidException;
 
-class Login implements LoginInterface {
+class Login extends Controller implements LoginInterface{
 
     private String $login;
     private String $password;
@@ -18,6 +21,35 @@ class Login implements LoginInterface {
         $this->setPassword($password);
     }
 
+    public static function index(Request $req, Response $res): Response {
+
+        try{
+
+            $body = self::getBody($req);
+
+            /** @var Login */
+            $login = new Login($body->login, $body->password);
+
+            $token = $login->login();
+
+            $response = $res->withStatus(201)
+                ->withHeader('Content-Type', 'application/json');
+            $response->getBody()->write(json_encode(
+                [
+                    "token" => $token,
+                    "timeout" => "60"
+                ]
+            ));
+           
+            return $response;
+        } catch(\Exception $e) {
+            $response = $res->withStatus(403)
+                ->withHeader('Content-Type', 'application/json');
+            $response->getBody()->write(json_encode(['message' => $e->getMessage()]));
+           
+            return $response;
+        }
+    }
     
     public function login(): String|bool
     {
