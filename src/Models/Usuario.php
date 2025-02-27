@@ -73,8 +73,8 @@ class Usuario extends Connector
     
             $this->conn->exec($query);
 
-            return $this->conn->lastInsertId();
             $this->conn->commit();
+            return $this->conn->lastInsertId();
         }catch(\Exception $e) {
             $this->conn->rollBack();
             throw new \Exception("Não foi possível cadastrar o usuário, entre em contato com o administrador!\n {$e->getMessage()}");

@@ -47,18 +47,19 @@ class Controller
     # Métodos de apoio
     protected static function setParamsToFetch($paramsReq)
     {
-        $params = array();
-        $arrayParams = get_object_vars($paramsReq);
-        if(count($arrayParams)> 0) {
-            foreach($arrayParams as $i => $val) {
-                if(!empty($i) && is_array($val) && count($val)){
-                    $val = self::formatVal($val);
-                    $params[$i] = $val;
+        if(isset($paramsReq)) {
+            $params = array();
+            $arrayParams = get_object_vars($paramsReq);
+            if(count($arrayParams)> 0) {
+                foreach($arrayParams as $i => $val) {
+                    if(!empty($i) && is_array($val) && count($val)){
+                        $val = self::formatVal($val);
+                        $params[$i] = $val;
+                    }
                 }
             }
+            return $params;
         }
-
-        return $params;
     }
 
     protected static function formatVal($arrVal = array())

@@ -28,6 +28,9 @@ class MainRoutes extends RoutesDefault{
 
         $this->app->group('/product', function (RouteCollectorProxy $group) {
             $group->post('/', '\Controllers\Produto\ProdutoController::store');
+            $group->get("/", "\Controllers\Produto\ProdutoController::getProducts");
+            $group->get("/{id}", "\Controllers\Produto\ProdutoController::getProducts");
+            $group->post('/update/{id}', "\Controllers\Produto\ProdutoController::update");
         });
     }
 }
