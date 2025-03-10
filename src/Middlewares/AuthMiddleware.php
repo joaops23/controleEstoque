@@ -14,7 +14,7 @@ class AuthMiddleware
     {
         try{
 
-            if(empty($request->getHeader('Authorization'))) {
+            if(empty($request->getHeader('Authorization')) && ($request->getServerParams())['REQUEST_URI'] != '/user/login') {
                 throw new \Exception("usuário não autenticado!");
             }
 
