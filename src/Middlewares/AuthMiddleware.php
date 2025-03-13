@@ -14,18 +14,20 @@ class AuthMiddleware
     {
         try{
 
-            if(empty($request->getHeader('Authorization')) && ($request->getServerParams())['REQUEST_URI'] != '/user/login') {
-                throw new \Exception("usuário não autenticado!");
-            }
+            if(($request->getServerParams())['REQUEST_METHOD'] !== 'OPTIONS') {
+                if((empty($request->getHeader('Authorization')) && ($request->getServerParams())['REQUEST_URI'] != '/user/login')) {
+                    throw new \Exception("usuário não autenticado!");
+                }
 
-            // Deixa aberta apenas a rota de login na API
-            if(($request->getServerParams())['REQUEST_URI'] != '/user/login') {
-    
-                //Recupera o token de autenticação
-                $token = explode(' ', $request->getHeader('Authorization')[0])[1];
-    
-                // Valida se usuário está devidamente logado
-                Login::verifyToken($token);
+                // Deixa aberta apenas a rota de login na API
+                if(($request->getServerParams())['REQUEST_URI'] != '/user/login') {
+        
+                    //Recupera o token de autenticação
+                    $token = explode(' ', $request->getHeader('Authorization')[0])[1];
+        
+                    // Valida se usuário está devidamente logado
+                    Login::verifyToken($token);
+                }
             }
             return $handler->handle($request);
         } catch(\Exception $e) {
