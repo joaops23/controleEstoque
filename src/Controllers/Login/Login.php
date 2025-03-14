@@ -99,7 +99,8 @@ class Login extends Controller implements LoginInterface{
         return [
             'usu_id' => $user['usu_id'], 
             'usu_cpf' => $user['usu_cpf'],
-            'logIn' => (new \Datetime())->getTimestamp()
+            'logIn' => (new \Datetime())->getTimestamp(),
+            'exp' => time() + 60 * 60
         ];
     }
 
