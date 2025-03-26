@@ -50,6 +50,9 @@ class UsuarioController extends Controller {
             $body = self::getBody($req);
 
             self::trataCadastro($body);
+            $body->usu_data_inclusao = date("Y-m-d");
+            $body->usu_senha = '000000'; # adiciona senha provisória
+            $body->usu_stt = 4;
             $params = self::setParamsToInsert($body);
     
             $resp = $ctr->model->setInsertUser($params);
@@ -108,8 +111,5 @@ class UsuarioController extends Controller {
             throw new \Exception("Informar email corretamente!");
         }
 
-
-        $params->usu_data_inclusao = date("Y-m-d");
-        $params->usu_senha = '000000'; # adiciona senha provisória
     }
 }

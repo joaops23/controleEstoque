@@ -20,9 +20,7 @@ class InitDatabase {
 
     private function setValidaExistenciaTabelas()
     {
-        $consulta = $this->conn->query("show tables");
-        // Criar as tabelas caso ainda não estejam criadas
-        $sql = file_get_contents(__DIR__ . '/sql/CreateFullTables.sql');
+        $sql = file_get_contents(__DIR__ . '/sql/1-CreateFullTables.sql');
         $tables = explode("-", $sql);
         foreach($tables as $table) {
             $this->conn->query($table);
@@ -30,4 +28,3 @@ class InitDatabase {
         
     }
 }
-// Finalizar
