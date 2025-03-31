@@ -32,12 +32,20 @@ class Mailer {
     {
         try{
             $this->setDestination($options);
+            $this->setBody($options);
+
+            if(!$this->mail->send()) {
+                return false;
+            } 
+
+            return true;
+            
         } catch(PHPMailerException $e) {
-            throw new \Exception($e);
+            throw new \Exception($e->getMessage());
         }
     }
 
-    private function setDestination(OptionsSendMail $options)
+    private function setDestination(OptionsSendMail $options): void
     {
         $this->mail->From = $options->from;
         $this->mail->FromName = (explode("@", $options->from))[0];
@@ -45,5 +53,17 @@ class Mailer {
                 $options->to,
                 (explode("@", $options->to))[0] 
         );
+
+        $this->mail->Subject = $options->subject;
     }
+
+    private function setBody(OptionsSendMail $options): void
+    {
+        $this->mail->CharSet = 'UTF-8';
+        $this->mail->msgHTML($options->body);
+        $this->mail->AltBody = "Mensagem de <NOME_DO_SISTEMA>";
+        $this->mail->addAttachment($options->attach);
+    }
+
+
 }
