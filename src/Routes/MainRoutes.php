@@ -24,6 +24,7 @@ class MainRoutes extends RoutesDefault{
             $group->get("/{id}", '\Controllers\Usuario\UsuarioController::getUsersById');
             $group->post('/store', '\Controllers\Usuario\UsuarioController::storeUser');
             $group->post('/update/{id}', '\Controllers\Usuario\UsuarioController::updateUser');
+            $group->get('/sendMailTemporaryPass/{id}', '\Controllers\Usuario\UsuarioController::sendMailTemporaryPass');
         });
 
         $this->app->group('/product', function (RouteCollectorProxy $group) {

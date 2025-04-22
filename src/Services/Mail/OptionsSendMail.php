@@ -3,7 +3,7 @@
 namespace Services\Mail;
 
 
-abstract class OptionsSendMail
+class OptionsSendMail
 {
     public $to;
     public $from;
@@ -15,6 +15,10 @@ abstract class OptionsSendMail
 
     public function __construct($args = array())
     {
-        
+        if(count($args) > 0) {
+            foreach($args as $index => $value) {
+                $this->$index = $value;
+            }
+        }
     }
 }

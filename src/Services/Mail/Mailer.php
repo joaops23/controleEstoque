@@ -7,7 +7,7 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
 
 class Mailer {
-    private PHPMailer $mail;
+    public PHPMailer $mail;
 
     public function __construct()
     {
@@ -16,15 +16,16 @@ class Mailer {
     }
 
 
-    private final function setCredentials(): void
+    private function setCredentials(): void
     {
-        $this->mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        //$this->mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        $this->mail->SMTPDebug = false;
         $this->mail->isSMTP();
         $this->mail->Host = getenv('MAIL_HOST');
         $this->mail->SMTPAuth = true;
         $this->mail->Username = getenv('MAIL_USER');
         $this->mail->Password = getenv('MAIL_PASS');
-        $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        //$this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $this->mail->Port = getenv('MAIL_PORT');
     }
 
@@ -36,8 +37,7 @@ class Mailer {
 
             if(!$this->mail->send()) {
                 return false;
-            } 
-
+            }
             return true;
             
         } catch(PHPMailerException $e) {
@@ -51,7 +51,7 @@ class Mailer {
         $this->mail->FromName = (explode("@", $options->from))[0];
         $this->mail->addAddress(
                 $options->to,
-                (explode("@", $options->to))[0] 
+                (explode("@", $options->to))[0]
         );
 
         $this->mail->Subject = $options->subject;
@@ -62,7 +62,9 @@ class Mailer {
         $this->mail->CharSet = 'UTF-8';
         $this->mail->msgHTML($options->body);
         $this->mail->AltBody = "Mensagem de <NOME_DO_SISTEMA>";
-        $this->mail->addAttachment($options->attach);
+        if(!empty($options->attach)) {
+            $this->mail->addAttachment($options->attach);
+        }
     }
 
 

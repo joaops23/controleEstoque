@@ -6,6 +6,8 @@ use Controllers\Controller;
 use Models\Usuario;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Services\Mail\Mailer;
+use Services\Mail\OptionsSendMail;
 
 class UsuarioController extends Controller {
 
@@ -111,5 +113,33 @@ class UsuarioController extends Controller {
             throw new \Exception("Informar email corretamente!");
         }
 
+    }
+
+    public static function sendMailTemporaryPass(Request $req, Response $res, $args): Response
+    {
+        $ctr = new Static();
+        try{
+            $usuId = $args['id'];
+            
+            $usuario = $ctr->model->getUserById($usuId);
+
+            $mail = new Mailer();
+
+            $mail->send(new OptionsSendMail([
+                "to" => $usuario->usu_email,
+                "from" => getenv('MAIL_FROM'),
+                "subject" => "Envio de senha provisória",
+                "body" => "<p>Olá! Aqui está sua senha provisória, realize o login com estas credenciais e solicite a alteração de senha</p>
+                    </br><b>Usuario:</b>{$usuario->usu_email}
+                    </br><b>Senha:</b>{$usuario->usu_senha}
+                ",
+            ]));
+            
+
+            return $ctr::getResponse($res, ['message' => "Senha provisória enviada com sucesso!"], 200);
+
+        } catch(\Exception $e) {
+            return $ctr::getResponse($res, ['message' => $e->getMessage()], '422');
+        }
     }
 }

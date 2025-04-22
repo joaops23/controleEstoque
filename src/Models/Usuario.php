@@ -4,16 +4,21 @@ namespace Models;
 use Database\Connector;
 use PDOStatement;
 
+class UsuarioAbstract
+{
+    public $usu_id;
+    public $usu_nome;
+    public $usu_cpf;
+    public $usu_email;
+    public $usu_senha;
+    public $usu_data_inclusao;
+    public $usu_data_alteracao;
+
+}
+
 class Usuario extends Connector 
 {
-    private $usu_id;
-    private $usu_nome;
-    private $usu_cpf;
-    private $usu_email;
-    private $usu_senha;
-    private $usu_data_inclusao;
-    private $usu_data_alteracao;
-
+    
     #campos 
     public function __construct()
     {
@@ -29,7 +34,6 @@ class Usuario extends Connector
         $usuario = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return count($usuario) != 0 ? $usuario[0] : false ;
     }
-
 
     /**
      * Array $params composto por 
@@ -106,6 +110,30 @@ class Usuario extends Connector
             $this->conn->rollBack();
             throw new \Exception("Não foi possível atualizar o usuário, entre em contato com o administrador!\n {$e->getMessage()}");
         }
+    }
+
+    public function getUserById($id): UsuarioAbstract
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM usuario where usu_id = :id");
+
+        $stmt->bindParam('id', $id);
+
+        $stmt->execute();
+
+        return $this->mapUser($stmt->fetch(\PDO::FETCH_ASSOC));
+    }
+
+
+    public function mapUser($map): UsuarioAbstract
+    {
+        $user = new UsuarioAbstract();
+        foreach($map as $index => $value) {
+            if(property_exists(UsuarioAbstract::class, $index)) {
+                eval('$user->' . $index ."='" . $value . "';");
+            }
+        }
+
+        return $user;
     }
     
 }
