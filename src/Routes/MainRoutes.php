@@ -32,6 +32,7 @@ class MainRoutes extends RoutesDefault{
             $group->get("/", "\Controllers\Produto\ProdutoController::getProducts");
             $group->get("/{id}", "\Controllers\Produto\ProdutoController::getProducts");
             $group->post('/update/{id}', "\Controllers\Produto\ProdutoController::update");
+            $group->get('/importSheet', "\Controllers\Produto\ProdutoController::importSheet");
         });
     }
 }

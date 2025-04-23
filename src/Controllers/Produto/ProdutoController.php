@@ -35,12 +35,12 @@ class ProdutoController extends Controller
         }
     }
 
-    public static function getProducts(Request $req, Response $res, $args): response
+    public static function getProducts(Request $req, Response $res, $args): Response
     {
         $ctr = new static();
 
         $body = self::getBodyNotRequired($req);
-        $params = self::setParamsToFetch($body?->params);
+        $params = self::setParamsToFetch($body->params);
         $id = isset($args['id']) && !empty($args['id']) ? $args['id']  : '';
 
         (isset($id) && !empty($id)) ? $params['prd_id'] = ["=", $id] : '';
@@ -69,6 +69,19 @@ class ProdutoController extends Controller
             return $ctr::getResponse($res, ["id" => $resp], '201');
         } catch(\Exception $e) {
             return $ctr::getResponse($res, ['message' => $e->getMessage()], "403");
+        }
+    }
+    
+    public static function importSheet(Request $req, Response $res): Response
+    {
+        $ctr = new static();
+
+        try{
+            // Iniciar serviço de criação de planilha
+            // Retornar planilha ou enviar por email
+            
+        }catch(\Exception $e) {
+            return $ctr::getResponse($res, ['message' => $e->getMessage()], '403');
         }
     }
 
