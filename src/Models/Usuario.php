@@ -46,7 +46,7 @@ class Usuario extends Connector
      * 
      * Argumento "|sl"(slaches) no valor serve para encapsular o valor em aspas, prevenção XSS
      */
-    public function getAllUsers($params = array(), $order = new \stdClass())
+    public function getAllUsers($params = array(), \stdClass $order = null)
     {
         $query = 'SELECT usu_id, usu_nome, usu_cpf, usu_email, usu_data_inclusao FROM usuario WHERE 1 :filters order by :ordenate :direction';
 

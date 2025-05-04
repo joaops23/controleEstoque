@@ -7,6 +7,8 @@ use Controllers\Controller;
 use Models\Produto;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Services\Xls\Reader;
+use Slim\Psr7\UploadedFile;
 use stdClass;
 
 class ProdutoController extends Controller
@@ -40,7 +42,7 @@ class ProdutoController extends Controller
         $ctr = new static();
 
         $body = self::getBodyNotRequired($req);
-        $params = self::setParamsToFetch($body?->params);
+        $params = self::setParamsToFetch($body->params);
         $id = isset($args['id']) && !empty($args['id']) ? $args['id']  : '';
 
         (isset($id) && !empty($id)) ? $params['prd_id'] = ["=", $id] : '';
@@ -109,5 +111,21 @@ class ProdutoController extends Controller
         if(!isset($params->prd_id)) {
             $params->prd_data_inclusao = date("Y-m-d H:i:s");
         }
+    }
+
+    public static function storeMass(Request $req, Response $res, $args): Response
+    {
+        $file = static::getFile($req);
+        // Move arquivo do diretório temporário para o diretório 'archivies'
+
+        // A partir do diretório, ler arquivo copiado.
+        
+        $xlsService = new Reader();
+
+        var_dump($file);
+        //$xlsService->loadXls($file->getFilePath(), 'xls');
+        
+
+        return $res;
     }
 }

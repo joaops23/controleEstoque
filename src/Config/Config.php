@@ -7,6 +7,7 @@ use Dotenv\Dotenv;
 // controlar corretamente session após configurar autenticação do usuário
 session_start();
 
+define("UPLOAD_FILES_DIRECTORY", $_SERVER['DOCUMENT_ROOT']);
 // Load environments
 $dotenv = Dotenv::createUnsafeImmutable(__DIR__ . "/../../");
 $dotenv->load();

@@ -82,10 +82,12 @@ hest_data datetime TIMESTAMP
 - Script de criação de banco
 - Construção da base da api
 - Módulo usuario ( CRUD )
+- Módulo produto
 
 ## Próximas features
 v1
-- Módulo produto
+- Implementação de Repository Patterns
+- Refatoração das models já criadas (produto e usuario) 
 - Módulo estoque (juntamente com controle do histórico)
 - Tela interativa para controlar as features (possivelmente em um novo repo)
 
@@ -150,3 +152,37 @@ Rota para
 ### Regras
 - Apenas um usuário cadastrado pode criar um novo usuário
 - Tempo máximo logado 1h
+
+----------------------------------------------------------------------
+## Fluxo de compra
+1. Cadastro da compra.
+1.1 - Cadastrar os produtos, suas quantidades e valores.
+1.2 - Ao finalizado, o pedido de compra é cadastrado como "pedido realizado"
+
+2. Efetivação
+2.1 - Efetivar a compra.
+2.2 - Incluir estoque doas produtos.
+2.3 - Finalizar pedido de compra.
+
+----------------------------------------------------------------------
+## Fluxo de venda
+
+1. Cadastro do pedido;
+1.1 - Cadastrar pedido de venda, com o itens, valores (quantidade e valor de venda) e cliente;
+1.2 - Aprovação de pedido;
+1.3 - Geração de nota ou comprovante (ou relatório em PDF com informações do pedido);
+1.4 - Efetivação da venda;
+1.5 - Envio de email para o cliente com informações da venda e acompanhamento do pedido;
+
+----------------------------------------------------------------------
+## Tabela de status
+
+1 - Pedido cadastrado;
+2 - Pagamento não aprovado;
+3 - pagamento aprovado;
+4 - Pedido realizado;
+5 - nota gerada;
+5 - Em deslocamento;
+6 - Entrega incompleta;
+7 - Pedido Finalizado;
+8 - Em rota de devolução;

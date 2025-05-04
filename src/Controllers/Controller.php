@@ -4,6 +4,8 @@ namespace Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Psr7\UploadedFile;
+use stdClass;
 
 class Controller
 {
@@ -12,13 +14,40 @@ class Controller
     {
         $body = (json_decode($req->getBody()));
 
-        if(empty($body)) {
+        if(empty($body) && count($req->getUploadedFiles()) == 0) {
             throw new \Exception("Payload Inválido!");
         }
 
         $body = $body->data;
 
         return $body;
+    }
+
+    public static function getFile(Request $req)
+    {
+        $file = UploadedFile::class;
+        if(count($req->getUploadedFiles()) > 0){
+            $file = $req->getUploadedFiles()['file'];
+            $filename = static::getFilesDirectory() . random_bytes(rand(0, 1000)) . static::getExtension($file->getFilePath());
+            var_dump($file->moveTo($filename));
+        }
+        
+    }
+
+    public static function getExtension($filepath)
+    {
+        $fileParsed = explode(".", $filepath);
+        return array_pop($fileParsed);
+    }
+
+    public static function getFilesDirectory(): string
+    {
+        var_dump(UPLOAD_FILES_DIRECTORY . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR);
+        $path = UPLOAD_FILES_DIRECTORY . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
+        if(!file_exists($path)) {
+            mkdir($path, '7777');
+        }
+        return $path;
     }
     
     public static function getBodyNotRequired(Request $req)
@@ -45,10 +74,10 @@ class Controller
     }
 
     # Métodos de apoio
-    protected static function setParamsToFetch($paramsReq)
+    protected static function setParamsToFetch(stdClass $paramsReq): array
     {
+        $params = array();
         if(isset($paramsReq)) {
-            $params = array();
             $arrayParams = get_object_vars($paramsReq);
             if(count($arrayParams)> 0) {
                 foreach($arrayParams as $i => $val) {
@@ -58,8 +87,8 @@ class Controller
                     }
                 }
             }
-            return $params;
         }
+        return $params;
     }
 
     protected static function formatVal($arrVal = array())
