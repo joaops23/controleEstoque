@@ -77,4 +77,28 @@ class Produto extends Connector
             throw new \Exception("Não foi possível atualizar o produto, entre em contato com o administrador!\n {$e->getMessage()}");
         }
     }
+
+    public function setInsertProductInMass($params)
+    {
+        $this->conn->beginTransaction();
+        try{
+            $query = "INSERT INTO produto (:COLUMNS) VALUES :VAL;";
+    
+            $columns = implode(",", array_keys($params));
+
+            $values = implode(",", $this->formatValueParams(array_values($params)));
+    
+            $query = str_replace(":COLUMNS", $columns, $query);
+            $query = str_replace(":VAL", $values, $query);
+    
+            $this->conn->exec($query);
+
+            $lastId = $this->conn->lastInsertId();
+            $this->conn->commit();
+            return $lastId;
+        }catch(\Exception $e) {
+            $this->conn->rollBack();
+            throw new \Exception("Não foi possível cadastrar o produto, entre em contato com o administrador!\n {$e->getMessage()}");
+        }
+    }
 }

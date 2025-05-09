@@ -2,7 +2,6 @@
 
 namespace Controllers\Produto;
 
-use BadFunctionCallException;
 use Controllers\Controller;
 use Models\Produto;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -10,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Services\Xls\Reader;
 use Slim\Psr7\UploadedFile;
 use stdClass;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ProdutoController extends Controller
 {
@@ -115,17 +115,56 @@ class ProdutoController extends Controller
 
     public static function storeMass(Request $req, Response $res, $args): Response
     {
-        $file = static::getFile($req);
-        // Move arquivo do diretório temporário para o diretório 'archivies'
-
-        // A partir do diretório, ler arquivo copiado.
+        $ctr = new static();
+        $file = UploadedFile::class;
+        if(count($req->getUploadedFiles()) == 0){
+            throw new \Exception('Arquivo [file] não enviado!');
+        }   
+        $file = $req->getUploadedFiles()['file'];
         
         $xlsService = new Reader();
 
-        var_dump($file);
-        //$xlsService->loadXls($file->getFilePath(), 'xls');
-        
+        $xlsService->loadXls($file->getFilePath());
 
+        $data = $xlsService->getData();
+
+        $ctr->storeProds($data, $res);
         return $res;
+    }
+
+
+    public function storeProds(array $data, Response $res)
+    {
+        try{
+            $params = $this->prepareDataImport($data);
+
+            var_dump($params);
+
+        } catch(\Exception $e) {
+            return $this::getResponse($res, ['message' => $e->getMessage()], "403");
+        }
+    }
+
+    /**
+     * Retorna um array do tipo
+     * 0 => [
+     *  "prd_descricao"
+"prd_valor"
+"prd_status"
+     * ]
+     */
+    private function prepareDataImport(array $data): array
+    {
+        $dataFormatted = [];
+        foreach($data as $item) {
+            $itemFormatted = [
+                "prd_descricao" => $item[0],
+                "prd_valor" => $item[1],
+                "prd_status" => $item[2]
+            ];
+
+            array_push($dataFormatted, $itemFormatted);
+        }
+        return $dataFormatted;
     }
 }

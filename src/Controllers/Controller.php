@@ -4,7 +4,6 @@ namespace Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Psr7\UploadedFile;
 use stdClass;
 
 class Controller
@@ -21,17 +20,6 @@ class Controller
         $body = $body->data;
 
         return $body;
-    }
-
-    public static function getFile(Request $req)
-    {
-        $file = UploadedFile::class;
-        if(count($req->getUploadedFiles()) > 0){
-            $file = $req->getUploadedFiles()['file'];
-            $filename = static::getFilesDirectory() . random_bytes(rand(0, 1000)) . static::getExtension($file->getFilePath());
-            var_dump($file->moveTo($filename));
-        }
-        
     }
 
     public static function getExtension($filepath)
